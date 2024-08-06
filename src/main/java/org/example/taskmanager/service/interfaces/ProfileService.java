@@ -1,13 +1,14 @@
 package org.example.taskmanager.service.interfaces;
 
-import org.example.taskmanager.api.request.AddProfileRequest;
-import org.example.taskmanager.api.request.PutProfileRequest;
+import org.example.taskmanager.api.request.profile.AddProfileRequest;
+import org.example.taskmanager.api.request.profile.PutProfileRequest;
 import org.example.taskmanager.api.response.ProfileResponse;
 
 import java.util.Collection;
 import java.util.UUID;
 
 public interface ProfileService {
+
     ProfileResponse create(
             AddProfileRequest request
     );
@@ -21,5 +22,5 @@ public interface ProfileService {
 
     Boolean delete(UUID id);
 
-    Collection<ProfileResponse> getAllWithPagination(Integer limit, Integer offset);
+    Collection<ProfileResponse> getAllWithPagination(Integer pageSize, Integer pageNumber);
 }

@@ -2,7 +2,7 @@ package org.example.taskmanager.service.implement;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import org.example.taskmanager.api.request.ProfileRequest;
+import org.example.taskmanager.api.request.AddProfileRequest;
 import org.example.taskmanager.api.request.PutProfileRequest;
 import org.example.taskmanager.api.response.ProfileResponse;
 import org.example.taskmanager.entity.Profile;
@@ -13,7 +13,6 @@ import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import java.util.Collection;
-import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -25,7 +24,7 @@ public class ProfileServiceImpl implements ProfileService {
 
     @Override
     @Transactional
-    public ProfileResponse create(ProfileRequest profile) {
+    public ProfileResponse create(AddProfileRequest profile) {
         var id = UUID.randomUUID();
         profileDAO.save(convertToEntity(id, profile));
         return get(id);
@@ -34,11 +33,6 @@ public class ProfileServiceImpl implements ProfileService {
     @Override
     public ProfileResponse get(UUID id) {
         return convertToResponse(getEntity(id));
-    }
-
-    @Override
-    public Collection<ProfileResponse> get() {
-        return List.of();
     }
 
     @Override
@@ -68,7 +62,7 @@ public class ProfileServiceImpl implements ProfileService {
     }
 
     private <T> Profile convertToEntity(UUID id, T dto) {
-        Profile profile = modelMapper.map(dto, Profile.class);
+        var profile = modelMapper.map(dto, Profile.class);
         if (profile.getId() == null) profile.setId(id);
         if (profile.getIsActive() == null) profile.setIsActive(true);
         return profile;

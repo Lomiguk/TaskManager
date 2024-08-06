@@ -2,7 +2,7 @@ package org.example.taskmanager.service.implement;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import org.example.taskmanager.api.request.AddProfileRequest;
+import org.example.taskmanager.api.request.ProfileRequest;
 import org.example.taskmanager.api.request.PutProfileRequest;
 import org.example.taskmanager.api.response.ProfileResponse;
 import org.example.taskmanager.entity.Profile;
@@ -25,9 +25,9 @@ public class ProfileServiceImpl implements ProfileService {
 
     @Override
     @Transactional
-    public ProfileResponse create(AddProfileRequest profile) {
+    public ProfileResponse create(ProfileRequest profile) {
         var id = UUID.randomUUID();
-        profileDAO.save(convertToEntity(profile, id));
+        profileDAO.save(convertToEntity(id, profile));
         return get(id);
     }
 
@@ -42,13 +42,23 @@ public class ProfileServiceImpl implements ProfileService {
     }
 
     @Override
+    @Transactional
     public ProfileResponse update(UUID id, PutProfileRequest request) {
-        return null;
+        profileDAO.save(convertToEntity(id, request));
+        return get(id);
     }
 
     @Override
     public Boolean delete(UUID id) {
-        return null;
+        profileDAO.deleteById(id);
+        return !profileDAO.existsById(id);
+    }
+
+    @Override
+    public Collection<ProfileResponse> getAllWithPagination(Integer limit, Integer offset) {
+        return profileDAO.findAllWithPagination(limit, offset).stream()
+                .map(this::convertToResponse)
+                .toList();
     }
 
     private Profile getEntity(UUID id) {
@@ -57,7 +67,7 @@ public class ProfileServiceImpl implements ProfileService {
         );
     }
 
-    private Profile convertToEntity(AddProfileRequest dto, UUID id) {
+    private <T> Profile convertToEntity(UUID id, T dto) {
         Profile profile = modelMapper.map(dto, Profile.class);
         if (profile.getId() == null) profile.setId(id);
         if (profile.getIsActive() == null) profile.setIsActive(true);

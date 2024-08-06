@@ -1,6 +1,7 @@
 package org.example.taskmanager.exception;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import java.util.logging.Logger;
@@ -10,6 +11,7 @@ public class GlobalExceptionHandler {
 
     private final static Logger LOGGER = Logger.getLogger(GlobalExceptionHandler.class.getName());
 
+    @ExceptionHandler(ExpectedEntityNotFoundException.class)
     protected ResponseEntity<String> handleExpectedEntityNotFound(
             ExpectedEntityNotFoundException ex
     ) {

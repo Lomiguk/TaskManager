@@ -1,7 +1,9 @@
 package org.example.taskmanager.controller;
 
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.PositiveOrZero;
 import lombok.RequiredArgsConstructor;
-import org.example.taskmanager.api.request.ProfileRequest;
+import org.example.taskmanager.api.request.AddProfileRequest;
 import org.example.taskmanager.api.request.PutProfileRequest;
 import org.example.taskmanager.api.response.ProfileResponse;
 import org.example.taskmanager.service.implement.ProfileServiceImpl;
@@ -28,7 +30,11 @@ public class ProfileController {
     private final ProfileServiceImpl profileService;
 
     @PostMapping
-    public ResponseEntity<ProfileResponse> save(@RequestBody ProfileRequest profile) {
+    public ResponseEntity<ProfileResponse> save(
+            @Valid
+            @RequestBody
+            AddProfileRequest profile
+    ) {
         return new ResponseEntity<>(
                 profileService.create(profile),
                 HttpStatus.CREATED
@@ -38,8 +44,10 @@ public class ProfileController {
     @GetMapping
     public ResponseEntity<Collection<ProfileResponse>> getAllWithPagination(
             @RequestParam("limit")
+            @PositiveOrZero(message = "Limit must be positive or zero")
             Integer limit,
             @RequestParam("offset")
+            @PositiveOrZero(message = "Offset must be positive or zero")
             Integer offset
     ) {
         return new ResponseEntity<>(
@@ -59,7 +67,9 @@ public class ProfileController {
     @PutMapping("/{id}")
     public ResponseEntity<ProfileResponse> update(
             @PathVariable UUID id,
-            @RequestBody PutProfileRequest profile
+            @Valid
+            @RequestBody
+            PutProfileRequest profile
     ) {
         return new ResponseEntity<>(
                 profileService.update(id, profile),

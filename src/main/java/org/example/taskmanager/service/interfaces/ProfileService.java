@@ -1,6 +1,6 @@
 package org.example.taskmanager.service.interfaces;
 
-import org.example.taskmanager.api.request.ProfileRequest;
+import org.example.taskmanager.api.request.AddProfileRequest;
 import org.example.taskmanager.api.request.PutProfileRequest;
 import org.example.taskmanager.api.response.ProfileResponse;
 
@@ -9,12 +9,10 @@ import java.util.UUID;
 
 public interface ProfileService {
     ProfileResponse create(
-            ProfileRequest request
+            AddProfileRequest request
     );
 
     ProfileResponse get(UUID id);
-
-    Collection<ProfileResponse> get();
 
     ProfileResponse update(
             UUID id,

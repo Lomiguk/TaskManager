@@ -6,7 +6,6 @@ import lombok.RequiredArgsConstructor;
 import org.example.taskmanager.api.request.task.AddTaskRequest;
 import org.example.taskmanager.api.request.task.PutTaskRequest;
 import org.example.taskmanager.api.response.TaskResponse;
-import org.example.taskmanager.repository.TaskDAO;
 import org.example.taskmanager.service.interfaces.TaskService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -29,7 +28,6 @@ import java.util.UUID;
 public class TaskController {
 
     private final TaskService taskService;
-    private final TaskDAO taskDAO;
 
     @PostMapping
     public ResponseEntity<TaskResponse> creat(

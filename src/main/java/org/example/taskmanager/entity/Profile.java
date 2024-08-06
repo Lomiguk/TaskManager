@@ -2,8 +2,6 @@ package org.example.taskmanager.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
@@ -20,6 +18,7 @@ import java.util.UUID;
 @AllArgsConstructor
 @Table(name = "profile")
 public class Profile {
+
     @Id
     private UUID id;
     private String name;

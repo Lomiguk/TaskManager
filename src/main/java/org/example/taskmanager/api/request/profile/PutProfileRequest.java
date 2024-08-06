@@ -1,4 +1,4 @@
-package org.example.taskmanager.api.request;
+package org.example.taskmanager.api.request.profile;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;

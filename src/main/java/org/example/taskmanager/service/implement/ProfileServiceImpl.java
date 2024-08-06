@@ -2,14 +2,15 @@ package org.example.taskmanager.service.implement;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import org.example.taskmanager.api.request.AddProfileRequest;
-import org.example.taskmanager.api.request.PutProfileRequest;
+import org.example.taskmanager.api.request.profile.AddProfileRequest;
+import org.example.taskmanager.api.request.profile.PutProfileRequest;
 import org.example.taskmanager.api.response.ProfileResponse;
 import org.example.taskmanager.entity.Profile;
 import org.example.taskmanager.exception.ExpectedEntityNotFoundException;
 import org.example.taskmanager.repository.ProfileDAO;
 import org.example.taskmanager.service.interfaces.ProfileService;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.util.Collection;
@@ -49,10 +50,11 @@ public class ProfileServiceImpl implements ProfileService {
     }
 
     @Override
-    public Collection<ProfileResponse> getAllWithPagination(Integer limit, Integer offset) {
-        return profileDAO.findAllWithPagination(limit, offset).stream()
+    public Collection<ProfileResponse> getAllWithPagination(Integer pageSize, Integer pageNumber) {
+        return profileDAO.findAll(PageRequest.of(pageNumber, pageSize)).stream()
                 .map(this::convertToResponse)
                 .toList();
+
     }
 
     private Profile getEntity(UUID id) {

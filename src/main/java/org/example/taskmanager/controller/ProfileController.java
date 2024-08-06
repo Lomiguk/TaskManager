@@ -3,8 +3,8 @@ package org.example.taskmanager.controller;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.PositiveOrZero;
 import lombok.RequiredArgsConstructor;
-import org.example.taskmanager.api.request.AddProfileRequest;
-import org.example.taskmanager.api.request.PutProfileRequest;
+import org.example.taskmanager.api.request.profile.AddProfileRequest;
+import org.example.taskmanager.api.request.profile.PutProfileRequest;
 import org.example.taskmanager.api.response.ProfileResponse;
 import org.example.taskmanager.service.implement.ProfileServiceImpl;
 import org.springframework.http.HttpStatus;
@@ -33,10 +33,10 @@ public class ProfileController {
     public ResponseEntity<ProfileResponse> save(
             @Valid
             @RequestBody
-            AddProfileRequest profile
+            AddProfileRequest request
     ) {
         return new ResponseEntity<>(
-                profileService.create(profile),
+                profileService.create(request),
                 HttpStatus.CREATED
         );
     }
@@ -69,10 +69,10 @@ public class ProfileController {
             @PathVariable UUID id,
             @Valid
             @RequestBody
-            PutProfileRequest profile
+            PutProfileRequest request
     ) {
         return new ResponseEntity<>(
-                profileService.update(id, profile),
+                profileService.update(id, request),
                 HttpStatus.OK
         );
     }

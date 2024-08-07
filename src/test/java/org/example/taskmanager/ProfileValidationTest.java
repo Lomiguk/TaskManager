@@ -3,6 +3,7 @@ package org.example.taskmanager;
 import jakarta.validation.Validation;
 import jakarta.validation.Validator;
 import org.example.taskmanager.api.request.profile.AddProfileRequest;
+import org.example.taskmanager.api.request.profile.PutProfileRequest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -12,6 +13,8 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 public class ProfileValidationTest {
 
     private Validator validator;
+
+    // AddProfileRequest
 
     @BeforeEach
     void setUp() {
@@ -77,6 +80,76 @@ public class ProfileValidationTest {
     @Test
     void testSaveProfileBadRequest_WrongPasswordSize() {
         var request = AddProfileRequest.builder()
+                .name("Test Name")
+                .email("t.name@mail.com")
+                .password("Test")
+                .build();
+
+        var violations = validator.validate(request);
+
+        assertFalse(violations.isEmpty());
+        assertEquals(violations.size(), 1);
+    }
+
+    // PutProfileRequest
+
+    @Test
+    void testPutProfile_WrongNameSize() {
+        var request = PutProfileRequest.builder()
+                .name("")
+                .email("t.name@mail.com")
+                .password("TestPassword")
+                .build();
+
+        var violations = validator.validate(request);
+
+        assertFalse(violations.isEmpty());
+        assertEquals(violations.size(), 1);
+    }
+
+    @Test
+    void testPutProfile_NullName() {
+        var request = PutProfileRequest.builder()
+                .email("t.name@mail.com")
+                .password("TestPassword")
+                .build();
+
+        var violations = validator.validate(request);
+
+        assertFalse(violations.isEmpty());
+        assertEquals(violations.size(), 1);
+    }
+
+    @Test
+    void testPutProfile_wrongEmailFormat() {
+        var request = PutProfileRequest.builder()
+                .name("Test Name")
+                .email("name.com")
+                .password("TestPassword")
+                .build();
+
+        var violations = validator.validate(request);
+
+        assertFalse(violations.isEmpty());
+        assertEquals(violations.size(), 1);
+    }
+
+    @Test
+    void testPutProfile_NullEmail() {
+        var request = PutProfileRequest.builder()
+                .name("Test Name")
+                .password("TestPassword")
+                .build();
+
+        var violations = validator.validate(request);
+
+        assertFalse(violations.isEmpty());
+        assertEquals(violations.size(), 1);
+    }
+
+    @Test
+    void testPutProfile_WrongPasswordSize() {
+        var request = PutProfileRequest.builder()
                 .name("Test Name")
                 .email("t.name@mail.com")
                 .password("Test")

@@ -2,11 +2,13 @@ CREATE TABLE task
 (
     id          UUID         PRIMARY KEY,
     label       VARCHAR(256) NOT NULL,
-    description TEXT         ,
+    description TEXT,
     status      TEXT         NOT NULL DEFAULT 'WAITING',
     priority    TEXT         NOT NULL,
     author_id   UUID         NOT NULL,
-    executor_id UUID
+    executor_id UUID,
+    CONSTRAINT task_author_fk FOREIGN KEY (author_id)   REFERENCES profile (id),
+    CONSTRAINT task_executor_fk FOREIGN KEY (executor_id) REFERENCES profile (id)
 );
 
 COMMENT ON COLUMN task.id IS 'Unique user identifier';

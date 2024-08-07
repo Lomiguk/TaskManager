@@ -7,6 +7,7 @@ import org.example.taskmanager.api.request.task.PutTaskRequest;
 import org.example.taskmanager.api.response.TaskResponse;
 import org.example.taskmanager.entity.Task;
 import org.example.taskmanager.exception.ExpectedEntityNotFoundException;
+import org.example.taskmanager.repository.ProfileDAO;
 import org.example.taskmanager.repository.TaskDAO;
 import org.example.taskmanager.service.interfaces.TaskService;
 import org.modelmapper.ModelMapper;
@@ -21,11 +22,14 @@ import java.util.UUID;
 public class TaskServiceImpl implements TaskService {
 
     private final TaskDAO taskDAO;
+    private final ProfileDAO profileDAO;
     private final ModelMapper modelMapper;
 
     @Override
     @Transactional
     public TaskResponse create(AddTaskRequest request) {
+        checkAuthorExecutorFKConstraint(request.getAuthorId(), request.getExecutorId());
+
         var id = UUID.randomUUID();
         var taskEntity = convertToEntity(id, request);
         taskDAO.save(taskEntity);
@@ -65,6 +69,7 @@ public class TaskServiceImpl implements TaskService {
     @Override
     @Transactional
     public TaskResponse putUpdate(UUID id, PutTaskRequest request) {
+        checkAuthorExecutorFKConstraint(request.getAuthorId(), request.getExecutorId());
         taskDAO.save(convertToEntity(id, request));
         return getById(id);
     }
@@ -76,9 +81,18 @@ public class TaskServiceImpl implements TaskService {
         return !taskDAO.existsById(id);
     }
 
+    private void checkAuthorExecutorFKConstraint(UUID authorId, UUID executorId) {
+        if (!profileDAO.existsById(authorId)) {
+            throw new ExpectedEntityNotFoundException(String.format("Author's profile with ID (%s) not found", authorId));
+        }
+        if (executorId != null && !profileDAO.existsById(executorId)) {
+            throw new ExpectedEntityNotFoundException(String.format("Executor's profile with ID (%s) not found", executorId));
+        }
+    }
+
     private Task getEntity(UUID id) {
         return taskDAO.findById(id).orElseThrow(
-                () -> new ExpectedEntityNotFoundException(String.format("Profile (%s) not found", id))
+                () -> new ExpectedEntityNotFoundException(String.format("Task with ID (%s) not found", id))
         );
     }
 

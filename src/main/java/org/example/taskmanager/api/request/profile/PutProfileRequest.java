@@ -18,9 +18,8 @@ public class PutProfileRequest {
     @Email
     @NotNull
     private String email;
-    @Email
     @NotNull
-    private String password;
     @Size(min = 5)
+    private String password;
     private Boolean isActive;
 }

@@ -6,7 +6,7 @@ import lombok.RequiredArgsConstructor;
 import org.example.taskmanager.api.request.profile.AddProfileRequest;
 import org.example.taskmanager.api.request.profile.PutProfileRequest;
 import org.example.taskmanager.api.response.ProfileResponse;
-import org.example.taskmanager.service.implement.ProfileServiceImpl;
+import org.example.taskmanager.service.interfaces.ProfileService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -27,7 +27,7 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class ProfileController {
 
-    private final ProfileServiceImpl profileService;
+    private final ProfileService profileService;
 
     @PostMapping
     public ResponseEntity<ProfileResponse> save(

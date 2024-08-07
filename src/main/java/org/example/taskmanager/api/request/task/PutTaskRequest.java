@@ -14,14 +14,14 @@ import java.util.UUID;
 public class PutTaskRequest {
 
     @NotNull
-    @Size(min = 1)
+    @Size(min = 1, message = "Min of label size is 1")
     private String label;
     private String description;
-    @NotNull
+    @NotNull (message = "Status can not be null (SELECT: WAITING, PROCESSING, COMPLETE)")
     private TaskStatus status;
-    @NotNull
+    @NotNull (message = "Priority can not be null (SELECT: HIGH, MEDIUM, LOW)")
     private TaskPriority priority;
-    @NotNull
+    @NotNull (message = "Author can not be null (SEND author's UUID)")
     private UUID authorId;
     private UUID executorId;
 }

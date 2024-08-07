@@ -9,6 +9,7 @@ import lombok.Data;
 @Data
 @AllArgsConstructor
 public class AddProfileRequest {
+
     @Size(min = 1, max = 100, message = "Wrong profile name size")
     private String name;
     @Email

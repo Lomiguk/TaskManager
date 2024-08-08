@@ -13,7 +13,7 @@ public interface ProfileService {
             AddProfileRequest request
     );
 
-    ProfileResponse get(UUID id);
+    ProfileResponse getById(UUID id);
 
     ProfileResponse update(
             UUID id,

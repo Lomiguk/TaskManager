@@ -6,8 +6,11 @@ import org.example.taskmanager.api.request.profile.AddProfileRequest;
 import org.example.taskmanager.api.request.profile.PutProfileRequest;
 import org.example.taskmanager.api.response.ProfileResponse;
 import org.example.taskmanager.entity.Profile;
+import org.example.taskmanager.entity.Task;
 import org.example.taskmanager.exception.ExpectedEntityNotFoundException;
 import org.example.taskmanager.repository.ProfileDAO;
+import org.example.taskmanager.repository.TaskCommentDAO;
+import org.example.taskmanager.repository.TaskDAO;
 import org.example.taskmanager.service.interfaces.ProfileService;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.PageRequest;
@@ -22,17 +25,19 @@ public class ProfileServiceImpl implements ProfileService {
 
     private final ProfileDAO profileDAO;
     private final ModelMapper modelMapper;
+    private final TaskDAO taskDAO;
+    private final TaskCommentDAO taskCommentDAO;
 
     @Override
     @Transactional
     public ProfileResponse create(AddProfileRequest profile) {
         var id = UUID.randomUUID();
         profileDAO.save(convertToEntity(id, profile));
-        return get(id);
+        return getById(id);
     }
 
     @Override
-    public ProfileResponse get(UUID id) {
+    public ProfileResponse getById(UUID id) {
         return convertToResponse(getEntity(id));
     }
 
@@ -40,13 +45,25 @@ public class ProfileServiceImpl implements ProfileService {
     @Transactional
     public ProfileResponse update(UUID id, PutProfileRequest request) {
         profileDAO.save(convertToEntity(id, request));
-        return get(id);
+        return getById(id);
     }
 
     @Override
+    @Transactional
     public Boolean delete(UUID id) {
-        profileDAO.deleteById(id);
-        return !profileDAO.existsById(id);
+        if (thereAreNoTasksWithProfileAsAuthor(id) && thereAreNoTaskCommentsFromProfile(id)) {
+            if (!thereAreNoTasksWithProfileAsExecutor(id)) {
+                removeProfileFromTaskAsExecutor(id);
+            }
+            profileDAO.deleteById(id);
+        } else {
+            var deactivatedProfile = getEntity(id);
+            deactivatedProfile.setIsActive(false);
+            profileDAO.save(deactivatedProfile);
+        }
+
+        var deletableProfile = profileDAO.findById(id);
+        return deletableProfile.isEmpty() || !deletableProfile.get().getIsActive();
     }
 
     @Override
@@ -55,6 +72,28 @@ public class ProfileServiceImpl implements ProfileService {
                 .map(this::convertToResponse)
                 .toList();
 
+    }
+
+    private void removeProfileFromTaskAsExecutor(UUID profileId) {
+        Collection<Task> tasks = taskDAO.findTaskByExecutorId(profileId);
+        tasks.stream().map(it -> {
+                    var newTaskVer = it.clone();
+                    newTaskVer.setExecutorId(null);
+                    return newTaskVer;
+                })
+                .toList().forEach(taskDAO::save);
+    }
+
+    private Boolean thereAreNoTasksWithProfileAsAuthor(UUID profileId) {
+        return !taskDAO.existsByAuthorId(profileId);
+    }
+
+    private Boolean thereAreNoTasksWithProfileAsExecutor(UUID profileId) {
+        return !taskDAO.existsByExecutorId(profileId);
+    }
+
+    private Boolean thereAreNoTaskCommentsFromProfile(UUID profileID) {
+        return !taskCommentDAO.existsByAuthorId(profileID);
     }
 
     private Profile getEntity(UUID id) {

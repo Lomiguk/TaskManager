@@ -13,4 +13,7 @@ public interface TaskDAO extends JpaRepository<Task, UUID> {
     Collection<Task> findTaskByAuthorId(UUID authorId);
 
     Collection<Task> findTaskByExecutorId(UUID executorId);
+
+    Boolean existsByAuthorId(UUID authorId);
+    Boolean existsByExecutorId(UUID authorId);
 }

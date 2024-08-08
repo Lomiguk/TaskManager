@@ -7,6 +7,7 @@ import org.example.taskmanager.api.request.profile.PutProfileRequest;
 import org.example.taskmanager.api.response.ProfileResponse;
 import org.example.taskmanager.entity.Profile;
 import org.example.taskmanager.exception.ExpectedEntityNotFoundException;
+import org.example.taskmanager.exception.UniqueConstrainViolationException;
 import org.example.taskmanager.repository.ProfileDAO;
 import org.example.taskmanager.service.interfaces.ProfileService;
 import org.modelmapper.ModelMapper;
@@ -25,9 +26,12 @@ public class ProfileServiceImpl implements ProfileService {
 
     @Override
     @Transactional
-    public ProfileResponse create(AddProfileRequest profile) {
+    public ProfileResponse create(AddProfileRequest request) {
+        checkForEmailUniqueConstraint(request.getEmail());
+
         var id = UUID.randomUUID();
-        profileDAO.save(convertToEntity(id, profile));
+
+        profileDAO.save(convertToEntity(id, request));
         return get(id);
     }
 
@@ -39,6 +43,8 @@ public class ProfileServiceImpl implements ProfileService {
     @Override
     @Transactional
     public ProfileResponse update(UUID id, PutProfileRequest request) {
+        checkForEmailUniqueConstraint(request.getEmail());
+
         profileDAO.save(convertToEntity(id, request));
         return get(id);
     }
@@ -72,5 +78,13 @@ public class ProfileServiceImpl implements ProfileService {
 
     private ProfileResponse convertToResponse(Profile entity) {
         return modelMapper.map(entity, ProfileResponse.class);
+    }
+
+    private void checkForEmailUniqueConstraint(String email) {
+        var isExisted = profileDAO.existsProfileByEmail(email);
+
+        if (isExisted) {
+            throw new UniqueConstrainViolationException(String.format("Email - %s already exists", email));
+        }
     }
 }

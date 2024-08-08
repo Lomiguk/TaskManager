@@ -8,4 +8,6 @@ import java.util.UUID;
 
 @Repository
 public interface ProfileDAO extends JpaRepository<Profile, UUID> {
+
+    Boolean existsProfileByEmail(String email);
 }

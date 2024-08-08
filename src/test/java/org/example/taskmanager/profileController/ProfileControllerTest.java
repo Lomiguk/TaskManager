@@ -1,4 +1,4 @@
-package org.example.taskmanager;
+package org.example.taskmanager.profileController;
 
 import jakarta.validation.Validation;
 import jakarta.validation.Validator;

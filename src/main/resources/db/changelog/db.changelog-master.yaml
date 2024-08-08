@@ -3,3 +3,5 @@ databaseChangeLog:
       file: db/changelog/scripts/01_create_profile_table.sql
   - include:
       file: db/changelog/scripts/02_create_task_table.sql
+  - include:
+      file: db/changelog/scripts/03_create_task_comment_table.sql

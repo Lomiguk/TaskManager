@@ -23,7 +23,7 @@ import java.util.Collection;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/profile")
+@RequestMapping("/profiles")
 @RequiredArgsConstructor
 public class ProfileController {
 
@@ -76,6 +76,8 @@ public class ProfileController {
                 HttpStatus.OK
         );
     }
+
+    @GetMapping("/{id}/tasks")
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Boolean> delete(@PathVariable UUID id) {

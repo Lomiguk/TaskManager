@@ -5,7 +5,9 @@ import jakarta.validation.constraints.PositiveOrZero;
 import lombok.RequiredArgsConstructor;
 import org.example.taskmanager.api.request.task.AddTaskRequest;
 import org.example.taskmanager.api.request.task.PutTaskRequest;
+import org.example.taskmanager.api.response.TaskCommentResponse;
 import org.example.taskmanager.api.response.TaskResponse;
+import org.example.taskmanager.service.interfaces.TaskCommentService;
 import org.example.taskmanager.service.interfaces.TaskService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -28,6 +30,7 @@ import java.util.UUID;
 public class TaskController {
 
     private final TaskService taskService;
+    private final TaskCommentService taskCommentServiceImpl;
 
     @PostMapping
     public ResponseEntity<TaskResponse> save(
@@ -63,6 +66,23 @@ public class TaskController {
     ) {
         return new ResponseEntity<>(
                 taskService.getAllWithPagination(pageSize, pageNumber),
+                HttpStatus.OK
+        );
+    }
+
+    @GetMapping("/{id}/comments")
+    public ResponseEntity<Collection<TaskCommentResponse>> getComments(
+        @PathVariable
+        UUID id,
+        @PositiveOrZero
+        @RequestParam("pageSize")
+        Integer pageSize,
+        @PositiveOrZero
+        @RequestParam("pageNumber")
+        Integer pageNumber
+    ) {
+        return new ResponseEntity<>(
+                taskCommentServiceImpl.getAllByTaskWithPagination(id, pageNumber, pageSize),
                 HttpStatus.OK
         );
     }

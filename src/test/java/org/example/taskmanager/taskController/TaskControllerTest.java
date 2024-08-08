@@ -9,6 +9,7 @@ import org.example.taskmanager.api.request.task.AddTaskRequest;
 import org.example.taskmanager.api.request.task.PutTaskRequest;
 import org.example.taskmanager.api.response.TaskResponse;
 import org.example.taskmanager.controller.TaskController;
+import org.example.taskmanager.service.interfaces.TaskCommentService;
 import org.example.taskmanager.service.interfaces.TaskService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -30,7 +31,8 @@ public class TaskControllerTest {
     @BeforeEach
     void setUp() {
         taskService = mock(TaskService.class);
-        taskController = new TaskController(taskService);
+        TaskCommentService taskCommentService = mock(TaskCommentService.class);
+        taskController = new TaskController(taskService, taskCommentService);
 
         try (var factory = Validation.buildDefaultValidatorFactory()) {
             validator = factory.getValidator();

@@ -2,11 +2,13 @@ package org.example.taskmanager.service.implement;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.example.taskmanager.api.enums.ProfileStatusForTask;
 import org.example.taskmanager.api.request.task.AddTaskRequest;
 import org.example.taskmanager.api.request.task.PutTaskRequest;
 import org.example.taskmanager.api.response.TaskResponse;
 import org.example.taskmanager.entity.Task;
 import org.example.taskmanager.exception.ExpectedEntityNotFoundException;
+import org.example.taskmanager.exception.UnexpectedRequestParameterException;
 import org.example.taskmanager.repository.ProfileDAO;
 import org.example.taskmanager.repository.TaskDAO;
 import org.example.taskmanager.service.interfaces.TaskService;
@@ -51,22 +53,6 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
-    public Collection<TaskResponse> getByAuthorProfile(UUID profileId) {
-        var tasks = taskDAO.findTaskByAuthorId(profileId);
-        return tasks.stream()
-                .map(this::convertToResponse)
-                .toList();
-    }
-
-    @Override
-    public Collection<TaskResponse> getByExecutorProfile(UUID profileId) {
-        var tasks = taskDAO.findTaskByExecutorId(profileId);
-        return tasks.stream()
-                .map(this::convertToResponse)
-                .toList();
-    }
-
-    @Override
     @Transactional
     public TaskResponse putUpdate(UUID id, PutTaskRequest request) {
         checkAuthorExecutorFKConstraint(request.getAuthorId(), request.getExecutorId());
@@ -79,6 +65,37 @@ public class TaskServiceImpl implements TaskService {
     public Boolean delete(UUID id) {
         taskDAO.deleteById(id);
         return !taskDAO.existsById(id);
+    }
+
+    @Override
+    public Collection<TaskResponse> getByProfile(UUID id, String status) {
+        Collection<TaskResponse> result;
+        try {
+            result = switch (ProfileStatusForTask.valueOf(status)) {
+                case AUTHOR -> getByAuthorProfile(id);
+                case EXECUTOR -> getByExecutorProfile(id);
+            };
+        } catch (IllegalArgumentException ex) {
+            throw new UnexpectedRequestParameterException(
+                    String.format("%s - unknown profile status. Existed values: AUTHOR, EXECUTOR", status)
+            );
+        }
+
+        return result;
+    }
+
+    private Collection<TaskResponse> getByAuthorProfile(UUID profileId) {
+        var tasks = taskDAO.findTaskByAuthorId(profileId);
+        return tasks.stream()
+                .map(this::convertToResponse)
+                .toList();
+    }
+
+    private Collection<TaskResponse> getByExecutorProfile(UUID profileId) {
+        var tasks = taskDAO.findTaskByExecutorId(profileId);
+        return tasks.stream()
+                .map(this::convertToResponse)
+                .toList();
     }
 
     private void checkAuthorExecutorFKConstraint(UUID authorId, UUID executorId) {

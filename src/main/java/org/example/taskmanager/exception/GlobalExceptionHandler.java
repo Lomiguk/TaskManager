@@ -46,6 +46,8 @@ public class GlobalExceptionHandler {
 
         result.put("errors", errors);
 
+        LOGGER.info("Constraint violation exception: " + errors);
+
         return ResponseEntity.badRequest().body(result);
     }
 
@@ -53,7 +55,16 @@ public class GlobalExceptionHandler {
     protected ResponseEntity<String> handleExpectedEntityNotFound(
             ExpectedEntityNotFoundException ex
     ) {
-        LOGGER.info("Expected entity not found");
+        LOGGER.info("Expected entity not found: " + ex.getMessage());
+
+        return ResponseEntity.badRequest().body(ex.getMessage());
+    }
+
+    @ExceptionHandler(UnexpectedRequestParameterException.class)
+    protected ResponseEntity<String> handleUnexpectedRequestParameter(
+            UnexpectedRequestParameterException ex
+    ) {
+        LOGGER.info("Unexpected request parameter: " + ex.getMessage());
 
         return ResponseEntity.badRequest().body(ex.getMessage());
     }

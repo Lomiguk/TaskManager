@@ -6,7 +6,9 @@ import lombok.RequiredArgsConstructor;
 import org.example.taskmanager.api.request.profile.AddProfileRequest;
 import org.example.taskmanager.api.request.profile.PutProfileRequest;
 import org.example.taskmanager.api.response.ProfileResponse;
+import org.example.taskmanager.api.response.TaskResponse;
 import org.example.taskmanager.service.interfaces.ProfileService;
+import org.example.taskmanager.service.interfaces.TaskService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -28,6 +30,7 @@ import java.util.UUID;
 public class ProfileController {
 
     private final ProfileService profileService;
+    private final TaskService taskService;
 
     @PostMapping
     public ResponseEntity<ProfileResponse> save(
@@ -78,6 +81,17 @@ public class ProfileController {
     }
 
     @GetMapping("/{id}/tasks")
+    public ResponseEntity<Collection<TaskResponse>> getTasks(
+            @PathVariable
+            UUID id,
+            @RequestParam("status")
+            String status
+    ) {
+        return new ResponseEntity<>(
+                taskService.getByProfile(id, status),
+                HttpStatus.OK
+        );
+    }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Boolean> delete(@PathVariable UUID id) {

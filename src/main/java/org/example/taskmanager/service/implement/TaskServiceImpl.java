@@ -10,6 +10,7 @@ import org.example.taskmanager.entity.Task;
 import org.example.taskmanager.exception.ExpectedEntityNotFoundException;
 import org.example.taskmanager.exception.UnexpectedRequestParameterException;
 import org.example.taskmanager.repository.ProfileDAO;
+import org.example.taskmanager.repository.TaskCommentDAO;
 import org.example.taskmanager.repository.TaskDAO;
 import org.example.taskmanager.service.interfaces.TaskService;
 import org.modelmapper.ModelMapper;
@@ -28,6 +29,7 @@ public class TaskServiceImpl implements TaskService {
     private final TaskDAO taskDAO;
     private final ProfileDAO profileDAO;
     private final ModelMapper modelMapper;
+    private final TaskCommentDAO taskCommentDAO;
 
     @Override
     @Transactional
@@ -65,6 +67,7 @@ public class TaskServiceImpl implements TaskService {
     @Override
     @Transactional
     public Boolean delete(UUID id) {
+        taskCommentDAO.deleteAllByTaskId(id);
         taskDAO.deleteById(id);
         return !taskDAO.existsById(id);
     }

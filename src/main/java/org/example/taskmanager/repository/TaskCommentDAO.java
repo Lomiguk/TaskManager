@@ -12,4 +12,8 @@ import java.util.UUID;
 public interface TaskCommentDAO extends JpaRepository<TaskComment, UUID> {
 
     Page<TaskComment> findAllByTaskId(UUID id, Pageable pageable);
+
+    void deleteAllByTaskId(UUID taskId);
+
+    Boolean existsByAuthorId(UUID profile);
 }

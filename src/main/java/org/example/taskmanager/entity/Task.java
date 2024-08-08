@@ -18,7 +18,7 @@ import java.util.UUID;
 @NoArgsConstructor
 @Table(name="task")
 @AllArgsConstructor
-public class Task {
+public class Task implements Cloneable{
 
     @Id
     private UUID id;
@@ -30,4 +30,21 @@ public class Task {
     private TaskPriority priority;
     private UUID authorId;
     private UUID executorId;
+
+    @Override
+    public Task clone() {
+        try {
+            var clone = (Task) super.clone();
+            clone.setId(id);
+            clone.setLabel(label);
+            clone.setDescription(description);
+            clone.setStatus(status);
+            clone.setPriority(priority);
+            clone.setAuthorId(authorId);
+            clone.setExecutorId(executorId);
+            return clone;
+        } catch (CloneNotSupportedException e) {
+            throw new AssertionError();
+        }
+    }
 }

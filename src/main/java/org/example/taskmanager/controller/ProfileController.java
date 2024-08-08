@@ -62,7 +62,7 @@ public class ProfileController {
     @GetMapping("/{id}")
     public ResponseEntity<ProfileResponse> get(@PathVariable UUID id) {
         return new ResponseEntity<>(
-                profileService.get(id),
+                profileService.getById(id),
                 HttpStatus.OK
         );
     }

@@ -6,6 +6,7 @@ import org.example.taskmanager.api.request.profile.AddProfileRequest;
 import org.example.taskmanager.api.response.ProfileResponse;
 import org.example.taskmanager.controller.ProfileController;
 import org.example.taskmanager.service.interfaces.ProfileService;
+import org.example.taskmanager.service.interfaces.TaskService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -28,7 +29,8 @@ public class ProfileControllerTest {
     @BeforeEach
     void setUp() {
         profileService = mock(ProfileService.class);
-        profileController = new ProfileController(profileService);
+        var taskService = mock(TaskService.class);
+        profileController = new ProfileController(profileService, taskService);
 
         try (var factory = Validation.buildDefaultValidatorFactory()) {
             validator = factory.getValidator();

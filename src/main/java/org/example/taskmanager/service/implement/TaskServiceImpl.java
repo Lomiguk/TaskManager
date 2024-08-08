@@ -16,8 +16,10 @@ import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -77,7 +79,13 @@ public class TaskServiceImpl implements TaskService {
             };
         } catch (IllegalArgumentException ex) {
             throw new UnexpectedRequestParameterException(
-                    String.format("%s - unknown profile status. Existed values: AUTHOR, EXECUTOR", status)
+                    String.format(
+                            "%s - unknown profile status. Existed values: %s",
+                            status,
+                            Arrays.stream(ProfileStatusForTask.values())
+                                    .map(Enum::name)
+                                    .collect(Collectors.joining(", "))
+                    )
             );
         }
 

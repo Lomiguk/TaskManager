@@ -3,6 +3,7 @@ package org.example.taskmanager.api.request.task;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import org.example.taskmanager.api.enums.TaskPriority;
 import org.example.taskmanager.api.enums.TaskStatus;
@@ -10,6 +11,7 @@ import org.example.taskmanager.api.enums.TaskStatus;
 import java.util.UUID;
 
 @Data
+@Builder
 @AllArgsConstructor
 public class PutTaskRequest {
 

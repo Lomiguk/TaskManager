@@ -30,14 +30,14 @@ public class TaskController {
     private final TaskService taskService;
 
     @PostMapping
-    public ResponseEntity<TaskResponse> creat(
+    public ResponseEntity<TaskResponse> save(
             @Valid
             @RequestBody
             AddTaskRequest request
     ) {
         return new ResponseEntity<>(
                 taskService.create(request),
-                HttpStatus.OK
+                HttpStatus.CREATED
         );
     }
 

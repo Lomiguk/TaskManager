@@ -8,6 +8,7 @@ import org.example.taskmanager.controller.ProfileController;
 import org.example.taskmanager.service.interfaces.ProfileService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpStatus;
 
 import java.util.UUID;
@@ -20,6 +21,7 @@ import static org.mockito.Mockito.when;
 public class ProfileControllerTest {
 
     private ProfileService profileService;
+    @MockBean
     private ProfileController profileController;
     private Validator validator;
 

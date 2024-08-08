@@ -4,9 +4,11 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 
 @Data
+@Builder
 @AllArgsConstructor
 public class PutProfileRequest {
 
@@ -16,9 +18,8 @@ public class PutProfileRequest {
     @Email
     @NotNull
     private String email;
-    @Email
     @NotNull
-    private String password;
     @Size(min = 5)
+    private String password;
     private Boolean isActive;
 }

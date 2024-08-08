@@ -43,15 +43,15 @@ public class ProfileController {
 
     @GetMapping
     public ResponseEntity<Collection<ProfileResponse>> getAllWithPagination(
-            @RequestParam("limit")
-            @PositiveOrZero(message = "Limit must be positive or zero")
-            Integer limit,
-            @RequestParam("offset")
-            @PositiveOrZero(message = "Offset must be positive or zero")
-            Integer offset
+            @RequestParam("pageSize")
+            @PositiveOrZero(message = "pageSize must be positive or zero")
+            Integer pageSize,
+            @RequestParam("pageNumber")
+            @PositiveOrZero(message = "pageNumber must be positive or zero")
+            Integer pageNumber
     ) {
         return new ResponseEntity<>(
-                profileService.getAllWithPagination(limit, offset),
+                profileService.getAllWithPagination(pageSize, pageNumber),
                 HttpStatus.OK
         );
     }

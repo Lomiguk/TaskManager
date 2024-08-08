@@ -17,11 +17,9 @@ public interface TaskService {
 
     Collection<TaskResponse> getAllWithPagination(Integer pageSize, Integer pageNumber);
 
-    Collection<TaskResponse> getByAuthorProfile(UUID id);
-
-    Collection<TaskResponse> getByExecutorProfile(UUID id);
-
     TaskResponse putUpdate(UUID id, PutTaskRequest request);
 
     Boolean delete(UUID id);
+
+    Collection<TaskResponse> getByProfile(UUID id, String status);
 }

@@ -13,6 +13,8 @@ import org.example.taskmanager.repository.ProfileDAO;
 import org.example.taskmanager.repository.TaskCommentDAO;
 import org.example.taskmanager.repository.TaskDAO;
 import org.example.taskmanager.service.interfaces.TaskService;
+import org.example.taskmanager.util.JwtUtil;
+import org.example.taskmanager.util.ProfileAccessUtil;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -20,22 +22,31 @@ import org.springframework.stereotype.Service;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.UUID;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class TaskServiceImpl implements TaskService {
 
+    private static final Logger LOGGER = Logger.getLogger(TaskServiceImpl.class.getName());
+
     private final TaskDAO taskDAO;
     private final ProfileDAO profileDAO;
     private final ModelMapper modelMapper;
     private final TaskCommentDAO taskCommentDAO;
+    private final JwtUtil jwtUtil;
+    private final ProfileAccessUtil profileAccessUtil;
 
     @Override
     @Transactional
     public TaskResponse create(AddTaskRequest request) {
+        // check
+        //TODO add ADMIN status to Profile
+        //TODO allow to admin profile creating tasks with all profile on author position
+        profileAccessUtil.checkAuthorAuthorization(request.getAuthorId());
         checkAuthorExecutorFKConstraint(request.getAuthorId(), request.getExecutorId());
-
+        // logic
         var id = UUID.randomUUID();
         var taskEntity = convertToEntity(id, request);
         taskDAO.save(taskEntity);
@@ -59,7 +70,10 @@ public class TaskServiceImpl implements TaskService {
     @Override
     @Transactional
     public TaskResponse putUpdate(UUID id, PutTaskRequest request) {
+        // check
+        profileAccessUtil.checkAuthorAuthorization(request.getAuthorId());
         checkAuthorExecutorFKConstraint(request.getAuthorId(), request.getExecutorId());
+        // logic
         taskDAO.save(convertToEntity(id, request));
         return getById(id);
     }
@@ -67,6 +81,9 @@ public class TaskServiceImpl implements TaskService {
     @Override
     @Transactional
     public Boolean delete(UUID id) {
+        // check
+        profileAccessUtil.checkAuthorAuthorization(getById(id).getAuthorId());
+        // logic
         taskCommentDAO.deleteAllByTaskId(id);
         taskDAO.deleteById(id);
         return !taskDAO.existsById(id);

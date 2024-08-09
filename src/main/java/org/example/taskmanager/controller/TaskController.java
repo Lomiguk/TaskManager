@@ -13,6 +13,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -96,6 +97,19 @@ public class TaskController {
     ) {
         return new ResponseEntity<>(
                 taskService.putUpdate(id, request),
+                HttpStatus.OK
+        );
+    }
+
+    @PatchMapping("/{id}/statuses")
+    public ResponseEntity<TaskResponse> patchStatus(
+            @PathVariable
+            UUID id,
+            @RequestParam("status")
+            String status
+    ) {
+        return new ResponseEntity<>(
+                taskService.patchStatus(id, status),
                 HttpStatus.OK
         );
     }

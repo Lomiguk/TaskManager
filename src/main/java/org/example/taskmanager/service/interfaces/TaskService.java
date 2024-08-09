@@ -22,4 +22,6 @@ public interface TaskService {
     Boolean delete(UUID id);
 
     Collection<TaskResponse> getByProfile(UUID id, String status);
+
+    TaskResponse patchStatus(UUID id, String status);
 }

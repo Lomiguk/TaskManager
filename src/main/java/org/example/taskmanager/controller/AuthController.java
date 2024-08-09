@@ -44,6 +44,7 @@ public class AuthController {
         );
     }
 
+    //TODO create scheduler for automatic cleaning token table
     /**
      * Logout authorized profile
      *

@@ -18,6 +18,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.util.Collection;
+import java.util.Set;
 import java.util.UUID;
 import java.util.logging.Logger;
 
@@ -60,7 +61,7 @@ public class ProfileServiceImpl implements ProfileService {
     @Transactional
     public ProfileResponse update(UUID id, PutProfileRequest request) {
         // check
-        profileAccessUtil.checkAuthorAuthorization(id);
+        profileAccessUtil.checkAuthorAuthorization(Set.of(id));
         // logic
         profileDAO.save(profileUtil.convertToEntity(id, request));
         return getById(id);
@@ -70,7 +71,7 @@ public class ProfileServiceImpl implements ProfileService {
     @Transactional
     public Boolean delete(UUID id) {
         // check
-        profileAccessUtil.checkAuthorAuthorization(id);
+        profileAccessUtil.checkAuthorAuthorization(Set.of(id));
         // logic
         if (thereAreNoTasksWithProfileAsAuthor(id) && thereAreNoTaskCommentsFromProfile(id)) {
             if (!thereAreNoTasksWithProfileAsExecutor(id)) {

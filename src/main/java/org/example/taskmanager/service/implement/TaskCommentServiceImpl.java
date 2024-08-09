@@ -17,6 +17,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.util.Collection;
+import java.util.Set;
 import java.util.UUID;
 
 @Service
@@ -37,7 +38,7 @@ public class TaskCommentServiceImpl implements TaskCommentService {
         // check
         checkAuthorFKConstraint(request.getAuthorId());
         checkTaskFKConstraint(request.getTaskId());
-        profileAccessUtil.checkAuthorAuthorization(request.getAuthorId());
+        profileAccessUtil.checkAuthorAuthorization(Set.of(request.getAuthorId()));
         // logic
         var id = UUID.randomUUID();
         var taskComment = convertToEntity(id, request);
@@ -72,7 +73,7 @@ public class TaskCommentServiceImpl implements TaskCommentService {
         // check
         checkAuthorFKConstraint(request.getAuthorId());
         checkTaskFKConstraint(request.getTaskId());
-        profileAccessUtil.checkAuthorAuthorization(request.getAuthorId());
+        profileAccessUtil.checkAuthorAuthorization(Set.of(request.getAuthorId()));
         // logic
         taskCommentDAO.save(convertToEntity(id, request));
         return getById(id);
@@ -81,7 +82,7 @@ public class TaskCommentServiceImpl implements TaskCommentService {
     @Override
     public Boolean delete(UUID id) {
         // check
-        profileAccessUtil.checkAuthorAuthorization(getEntity(id).getAuthorId());
+        profileAccessUtil.checkAuthorAuthorization(Set.of(getEntity(id).getAuthorId()));
         // logic
         taskCommentDAO.deleteById(id);
         return !taskCommentDAO.existsById(id);

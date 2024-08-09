@@ -3,6 +3,7 @@ package org.example.taskmanager.service.implement;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.example.taskmanager.api.enums.ProfileStatusForTask;
+import org.example.taskmanager.api.enums.TaskStatus;
 import org.example.taskmanager.api.request.task.AddTaskRequest;
 import org.example.taskmanager.api.request.task.PutTaskRequest;
 import org.example.taskmanager.api.response.TaskResponse;
@@ -13,7 +14,6 @@ import org.example.taskmanager.repository.ProfileDAO;
 import org.example.taskmanager.repository.TaskCommentDAO;
 import org.example.taskmanager.repository.TaskDAO;
 import org.example.taskmanager.service.interfaces.TaskService;
-import org.example.taskmanager.util.JwtUtil;
 import org.example.taskmanager.util.ProfileAccessUtil;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.PageRequest;
@@ -21,6 +21,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Set;
 import java.util.UUID;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
@@ -35,7 +36,6 @@ public class TaskServiceImpl implements TaskService {
     private final ProfileDAO profileDAO;
     private final ModelMapper modelMapper;
     private final TaskCommentDAO taskCommentDAO;
-    private final JwtUtil jwtUtil;
     private final ProfileAccessUtil profileAccessUtil;
 
     @Override
@@ -44,14 +44,13 @@ public class TaskServiceImpl implements TaskService {
         // check
         //TODO add ADMIN status to Profile
         //TODO allow to admin profile creating tasks with all profile on author position
-        profileAccessUtil.checkAuthorAuthorization(request.getAuthorId());
+        profileAccessUtil.checkAuthorAuthorization(Set.of(request.getAuthorId()));
         checkAuthorExecutorFKConstraint(request.getAuthorId(), request.getExecutorId());
         // logic
         var id = UUID.randomUUID();
         var taskEntity = convertToEntity(id, request);
-        taskDAO.save(taskEntity);
 
-        return getById(id);
+        return convertToResponse(taskDAO.save(taskEntity));
     }
 
     @Override
@@ -71,18 +70,41 @@ public class TaskServiceImpl implements TaskService {
     @Transactional
     public TaskResponse putUpdate(UUID id, PutTaskRequest request) {
         // check
-        profileAccessUtil.checkAuthorAuthorization(request.getAuthorId());
+        profileAccessUtil.checkAuthorAuthorization(Set.of(request.getAuthorId()));
         checkAuthorExecutorFKConstraint(request.getAuthorId(), request.getExecutorId());
         // logic
-        taskDAO.save(convertToEntity(id, request));
-        return getById(id);
+        return convertToResponse(taskDAO.save(convertToEntity(id, request)));
+    }
+
+    @Override
+    @Transactional
+    public TaskResponse patchStatus(UUID id, String status) {
+        // prepare
+        var task = getEntity(id);
+        //check
+        profileAccessUtil.checkAuthorAuthorization(Set.of(task.getAuthorId(), task.getExecutorId()));
+        //logic
+        try {
+            task.setStatus(TaskStatus.valueOf(status));
+            return convertToResponse(taskDAO.save(task));
+        } catch (IllegalArgumentException ex) {
+            throw new UnexpectedRequestParameterException(
+                    String.format(
+                            "%s - unknown task status. Existed values: %s",
+                            status,
+                            Arrays.stream(TaskStatus.values())
+                                    .map(Enum::name)
+                                    .collect(Collectors.joining(", "))
+                    )
+            );
+        }
     }
 
     @Override
     @Transactional
     public Boolean delete(UUID id) {
         // check
-        profileAccessUtil.checkAuthorAuthorization(getById(id).getAuthorId());
+        profileAccessUtil.checkAuthorAuthorization(Set.of(getById(id).getAuthorId()));
         // logic
         taskCommentDAO.deleteAllByTaskId(id);
         taskDAO.deleteById(id);

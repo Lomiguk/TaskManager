@@ -28,3 +28,10 @@ spring:
     change-log: db/changelog/db.changelog-master.yaml
     enabled: true
     drop-first: false
+token:
+  access:
+    secret: ${SECRET_ACCESS}
+    lifetime: 1h
+  refresh:
+    secret: ${SECRET_REFRESH}
+    lifetime: 8h

@@ -2,7 +2,9 @@ package org.example.taskmanager.exception;
 
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -67,5 +69,12 @@ public class GlobalExceptionHandler {
         LOGGER.info("Unexpected request parameter: " + ex.getMessage());
 
         return ResponseEntity.badRequest().body(ex.getMessage());
+    }
+
+    @ExceptionHandler(AccessDeniedException.class)
+    protected ResponseEntity<String> handleAccessDeniedException(AccessDeniedException ex) {
+        LOGGER.info(String.format("Unauthorized request: %s", ex));
+
+        return new ResponseEntity<>("Unauthorized request", HttpStatus.UNAUTHORIZED);
     }
 }

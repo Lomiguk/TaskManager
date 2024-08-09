@@ -11,6 +11,7 @@ import org.example.taskmanager.repository.ProfileDAO;
 import org.example.taskmanager.repository.TaskCommentDAO;
 import org.example.taskmanager.repository.TaskDAO;
 import org.example.taskmanager.service.interfaces.TaskCommentService;
+import org.example.taskmanager.util.ProfileAccessUtil;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -26,15 +27,18 @@ public class TaskCommentServiceImpl implements TaskCommentService {
     private final ProfileDAO profileDAO;
     private final TaskDAO taskDAO;
     private final ModelMapper modelMapper;
+    private final ProfileAccessUtil profileAccessUtil;
 
     @Override
     @Transactional
     public TaskCommentResponse create(
             AddTaskCommentRequest request
     ) {
+        // check
         checkAuthorFKConstraint(request.getAuthorId());
         checkTaskFKConstraint(request.getTaskId());
-
+        profileAccessUtil.checkAuthorAuthorization(request.getAuthorId());
+        // logic
         var id = UUID.randomUUID();
         var taskComment = convertToEntity(id, request);
         taskCommentDAO.save(taskComment);
@@ -54,8 +58,9 @@ public class TaskCommentServiceImpl implements TaskCommentService {
             Integer pageNumber,
             Integer pageSize
     ) {
+        // check
         checkTaskFKConstraint(taskId);
-
+        // logic
         return taskCommentDAO.findAllByTaskId(taskId, PageRequest.of(pageNumber, pageSize)).stream()
                 .map(this::convertToResponse)
                 .toList();
@@ -64,15 +69,20 @@ public class TaskCommentServiceImpl implements TaskCommentService {
     @Override
     @Transactional
     public TaskCommentResponse update(UUID id, PutTaskCommentRequest request) {
+        // check
         checkAuthorFKConstraint(request.getAuthorId());
         checkTaskFKConstraint(request.getTaskId());
-
+        profileAccessUtil.checkAuthorAuthorization(request.getAuthorId());
+        // logic
         taskCommentDAO.save(convertToEntity(id, request));
         return getById(id);
     }
 
     @Override
     public Boolean delete(UUID id) {
+        // check
+        profileAccessUtil.checkAuthorAuthorization(getEntity(id).getAuthorId());
+        // logic
         taskCommentDAO.deleteById(id);
         return !taskCommentDAO.existsById(id);
     }

@@ -68,6 +68,9 @@ public class AuthenticationService {
                 .userDetailsService()
                 .loadUserByUsername(request.getEmail());
         var profileEntity = profileDAO.findByEmail(request.getEmail());
+
+        jwtService.deleteProfileToken(profileEntity.getId());
+
         var accessJwt = jwtService.registerToken(
                 profileEntity.getId(),
                 jwtService.generateAccessToken(userDetails),

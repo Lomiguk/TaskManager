@@ -7,6 +7,6 @@
 
 # Для развёртывания проекта необходимо
 - Иметь Docker compose
-- из директориипроекта выполнить команду `docker compose up`
-- сервис будет доступен по адресу localhost:8181
-- доступ к документации OpenAPI по адресу http://localhost:8181/swagger-ui/index.html
+- Из директории проекта выполнить команду `docker compose up`
+сервис будет доступен по адресу localhost:8181
+доступ к документации OpenAPI по адресу http://localhost:8181/swagger-ui/index.html

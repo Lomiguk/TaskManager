@@ -74,7 +74,7 @@ public class TaskController {
     /**
      * Getting collection of tasks with pagination
      *
-     * @param pageSize quantity of tasks dto by request
+     * @param pageSize   quantity of tasks dto by request
      * @param pageNumber offset
      * @return ResponseEntity with collection of task's data as response body
      */
@@ -97,22 +97,22 @@ public class TaskController {
     /**
      * Getting task's comments by task id
      *
-     * @param id Unique task identifier
-     * @param pageSize quantity of comments dto by request
+     * @param id         Unique task identifier
+     * @param pageSize   quantity of comments dto by request
      * @param pageNumber offset
      * @return ResponseEntity with collection of task's comments data as response body
      */
     @Operation(summary = "Getting task's comments by task id")
     @GetMapping("/{id}/comments")
     public ResponseEntity<Collection<TaskCommentResponse>> getComments(
-        @PathVariable
-        UUID id,
-        @PositiveOrZero
-        @RequestParam("pageSize")
-        Integer pageSize,
-        @PositiveOrZero
-        @RequestParam("pageNumber")
-        Integer pageNumber
+            @PathVariable
+            UUID id,
+            @PositiveOrZero
+            @RequestParam("pageSize")
+            Integer pageSize,
+            @PositiveOrZero
+            @RequestParam("pageNumber")
+            Integer pageNumber
     ) {
         return new ResponseEntity<>(
                 taskCommentServiceImpl.getAllByTaskWithPagination(id, pageNumber, pageSize),
@@ -123,7 +123,7 @@ public class TaskController {
     /**
      * Put update of task's data
      *
-     * @param id Unique task identifier
+     * @param id      Unique task identifier
      * @param request request body with new task's data
      * @return ResponseEntity with new saves task's data
      */
@@ -144,7 +144,7 @@ public class TaskController {
     /**
      * Patch update of the task's status
      *
-     * @param id Unique task identifier
+     * @param id     Unique task identifier
      * @param status Request param with new task status
      * @return ResponseEntity with task's data after the update
      */

@@ -55,7 +55,7 @@ public class ProfileController {
     /**
      * Getting profiles
      *
-     * @param pageSize Count of profiles in the response
+     * @param pageSize   Count of profiles in the response
      * @param pageNumber Offset
      * @return ResponseEntity with Collection of profiles as response body
      */
@@ -93,7 +93,7 @@ public class ProfileController {
     /**
      * Put update profile entity
      *
-     * @param id Unique profile identifier
+     * @param id      Unique profile identifier
      * @param request New Profile's data
      * @return ResponseEntity with new Profile data as response body
      */
@@ -114,7 +114,7 @@ public class ProfileController {
     /**
      * Get profile's tasks
      *
-     * @param id Unique profile identifier
+     * @param id     Unique profile identifier
      * @param status profile status - The role of the profile in the task
      * @return ResponseEntity with list of profile's tasks as response body
      */

@@ -28,7 +28,7 @@ public class AuthController {
     /**
      * Creating new profile
      *
-     * @param request       request with new profile data
+     * @param request request with new profile data
      * @return Http response with created profile response model
      */
     @Operation(summary = "User sign-up")
@@ -45,6 +45,7 @@ public class AuthController {
     }
 
     //TODO create scheduler for automatic cleaning token table
+
     /**
      * Logout authorized profile
      *
@@ -62,7 +63,7 @@ public class AuthController {
     /**
      * Sign-in profile
      *
-     * @param request       Profile credential
+     * @param request Profile credential
      * @return Http response with access & refresh token
      */
     @Operation(summary = "User sign-in")

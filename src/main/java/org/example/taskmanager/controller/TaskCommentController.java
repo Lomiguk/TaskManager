@@ -64,7 +64,7 @@ public class TaskCommentController {
     /**
      * Put update of task's comment by id
      *
-     * @param id Unique comment identifier
+     * @param id      Unique comment identifier
      * @param request Request body with new comment data
      * @return ResponseEntity with new  saved comment data
      */

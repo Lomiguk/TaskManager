@@ -1,5 +1,6 @@
 package org.example.taskmanager.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.PositiveOrZero;
 import lombok.RequiredArgsConstructor;
@@ -33,6 +34,13 @@ public class TaskController {
     private final TaskService taskService;
     private final TaskCommentService taskCommentServiceImpl;
 
+    /**
+     * Saving: Creating new Task in db
+     *
+     * @param request RequestBody with new Task data
+     * @return ResponseEntity with new Task data as response body
+     */
+    @Operation(summary = "Creating new Task")
     @PostMapping
     public ResponseEntity<TaskResponse> save(
             @Valid
@@ -45,6 +53,13 @@ public class TaskController {
         );
     }
 
+    /**
+     * Getting task's data by id
+     *
+     * @param id Unique task identifier
+     * @return ResponseEntity with task data as response body
+     */
+    @Operation(summary = "Getting task's data by id")
     @GetMapping("/{id}")
     public ResponseEntity<TaskResponse> get(
             @PathVariable("id")
@@ -56,6 +71,14 @@ public class TaskController {
         );
     }
 
+    /**
+     * Getting collection of tasks with pagination
+     *
+     * @param pageSize quantity of tasks dto by request
+     * @param pageNumber offset
+     * @return ResponseEntity with collection of task's data as response body
+     */
+    @Operation(summary = "Getting collection of tasks with pagination")
     @GetMapping
     public ResponseEntity<Collection<TaskResponse>> getAllWithPagination(
             @PositiveOrZero
@@ -71,6 +94,15 @@ public class TaskController {
         );
     }
 
+    /**
+     * Getting task's comments by task id
+     *
+     * @param id Unique task identifier
+     * @param pageSize quantity of comments dto by request
+     * @param pageNumber offset
+     * @return ResponseEntity with collection of task's comments data as response body
+     */
+    @Operation(summary = "Getting task's comments by task id")
     @GetMapping("/{id}/comments")
     public ResponseEntity<Collection<TaskCommentResponse>> getComments(
         @PathVariable
@@ -88,6 +120,14 @@ public class TaskController {
         );
     }
 
+    /**
+     * Put update of task's data
+     *
+     * @param id Unique task identifier
+     * @param request request body with new task's data
+     * @return ResponseEntity with new saves task's data
+     */
+    @Operation(summary = "Put update of task's data")
     @PutMapping("/{id}")
     public ResponseEntity<TaskResponse> putUpdate(
             @PathVariable("id")
@@ -101,6 +141,14 @@ public class TaskController {
         );
     }
 
+    /**
+     * Patch update of the task's status
+     *
+     * @param id Unique task identifier
+     * @param status Request param with new task status
+     * @return ResponseEntity with task's data after the update
+     */
+    @Operation(summary = "Patch update of the task's status")
     @PatchMapping("/{id}/statuses")
     public ResponseEntity<TaskResponse> patchStatus(
             @PathVariable
@@ -114,6 +162,13 @@ public class TaskController {
         );
     }
 
+    /**
+     * Deleting Task data from db
+     *
+     * @param id Unique task identifier
+     * @return ResponseEntity with boolean flag - success/failure as response body
+     */
+    @Operation(summary = "Deleting Task data from db")
     @DeleteMapping("/{id}")
     public ResponseEntity<Boolean> delete(@PathVariable UUID id) {
         return new ResponseEntity<>(

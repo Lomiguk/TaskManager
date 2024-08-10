@@ -1,5 +1,6 @@
 package org.example.taskmanager.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.example.taskmanager.api.request.taskComment.AddTaskCommentRequest;
@@ -26,6 +27,13 @@ public class TaskCommentController {
 
     private final TaskCommentService taskCommentService;
 
+    /**
+     * Saving: Create new Task comment in db
+     *
+     * @param request Request body with new task's comment data
+     * @return ResponseEntity with new task's comment data as response body
+     */
+    @Operation(summary = "Create new Task comment")
     @PostMapping
     public ResponseEntity<TaskCommentResponse> create(
             @Valid
@@ -38,6 +46,13 @@ public class TaskCommentController {
         );
     }
 
+    /**
+     * Getting Task's comment by id
+     *
+     * @param id Unique comment identifier
+     * @return ResponseEntity with task's comment data as response body
+     */
+    @Operation(summary = "Getting Task's comment by id")
     @GetMapping("/{id}")
     public ResponseEntity<TaskCommentResponse> getById(@PathVariable UUID id) {
         return new ResponseEntity<>(
@@ -46,9 +61,14 @@ public class TaskCommentController {
         );
     }
 
-    // There is no get all with pagination, because comments are part of tasks,
-    // so they are received from TaskController
-
+    /**
+     * Put update of task's comment by id
+     *
+     * @param id Unique comment identifier
+     * @param request Request body with new comment data
+     * @return ResponseEntity with new  saved comment data
+     */
+    @Operation(summary = "Put update of task's comment by id")
     @PutMapping("/{id}")
     public ResponseEntity<TaskCommentResponse> update(
             @PathVariable
@@ -63,6 +83,13 @@ public class TaskCommentController {
         );
     }
 
+    /**
+     * Deleting task's comment by id
+     *
+     * @param id Unique comment identifier
+     * @return ResponseEntity with boolean flag - success/failure as response body
+     */
+    @Operation(summary = "Deleting task's comment by id")
     @DeleteMapping("/{id}")
     public ResponseEntity<Boolean> delete(@PathVariable UUID id) {
         return new ResponseEntity<>(

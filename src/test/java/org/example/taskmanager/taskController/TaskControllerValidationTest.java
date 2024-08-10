@@ -281,7 +281,7 @@ public class TaskControllerValidationTest {
         var pageNumber = 0;
         var pageSize = 10;
 
-        mockMvc.perform(get("/task")
+        mockMvc.perform(get("/tasks")
                 .param("pageNumber", String.valueOf(pageNumber))
                 .param("pageSize", String.valueOf(pageSize))
         ).andExpect(MockMvcResultMatchers.status().isOk());
@@ -292,7 +292,7 @@ public class TaskControllerValidationTest {
         var pageNumber = 0;
         var pageSize = -10;
 
-        mockMvc.perform(get("/task")
+        mockMvc.perform(get("/tasks")
                 .param("pageNumber", String.valueOf(pageNumber))
                 .param("pageSize", String.valueOf(pageSize))
         ).andExpect(MockMvcResultMatchers.status().isBadRequest());
@@ -303,7 +303,7 @@ public class TaskControllerValidationTest {
         var pageNumber = -10;
         var pageSize = 0;
 
-        mockMvc.perform(get("/task")
+        mockMvc.perform(get("/tasks")
                 .param("pageNumber", String.valueOf(pageNumber))
                 .param("pageSize", String.valueOf(pageSize))
         ).andExpect(MockMvcResultMatchers.status().isBadRequest());

@@ -1,5 +1,6 @@
 package org.example.taskmanager.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.PositiveOrZero;
 import lombok.RequiredArgsConstructor;
@@ -32,6 +33,13 @@ public class ProfileController {
     private final ProfileService profileService;
     private final TaskService taskService;
 
+    /**
+     * Creating new Profile in db
+     *
+     * @param request Request with new-profile data
+     * @return ResponseEntity with new profile data as response body
+     */
+    @Operation(summary = "Creating new Profile")
     @PostMapping
     public ResponseEntity<ProfileResponse> save(
             @Valid
@@ -44,6 +52,14 @@ public class ProfileController {
         );
     }
 
+    /**
+     * Getting profiles
+     *
+     * @param pageSize Count of profiles in the response
+     * @param pageNumber Offset
+     * @return ResponseEntity with Collection of profiles as response body
+     */
+    @Operation(summary = "Getting profiles")
     @GetMapping
     public ResponseEntity<Collection<ProfileResponse>> getAllWithPagination(
             @RequestParam("pageSize")
@@ -59,6 +75,13 @@ public class ProfileController {
         );
     }
 
+    /**
+     * Get profile by id
+     *
+     * @param id Unique profile identifier
+     * @return ResponseEntity with Profile as response body
+     */
+    @Operation(summary = "Get profile by id")
     @GetMapping("/{id}")
     public ResponseEntity<ProfileResponse> get(@PathVariable UUID id) {
         return new ResponseEntity<>(
@@ -67,6 +90,14 @@ public class ProfileController {
         );
     }
 
+    /**
+     * Put update profile entity
+     *
+     * @param id Unique profile identifier
+     * @param request New Profile's data
+     * @return ResponseEntity with new Profile data as response body
+     */
+    @Operation(summary = "Put update profile entity")
     @PutMapping("/{id}")
     public ResponseEntity<ProfileResponse> update(
             @PathVariable UUID id,
@@ -80,6 +111,14 @@ public class ProfileController {
         );
     }
 
+    /**
+     * Get profile's tasks
+     *
+     * @param id Unique profile identifier
+     * @param status profile status - The role of the profile in the task
+     * @return ResponseEntity with list of profile's tasks as response body
+     */
+    @Operation(summary = "Get profile's tasks")
     @GetMapping("/{id}/tasks")
     public ResponseEntity<Collection<TaskResponse>> getTasks(
             @PathVariable
@@ -93,6 +132,13 @@ public class ProfileController {
         );
     }
 
+    /**
+     * Deleting profile by id
+     *
+     * @param id Unique profile identifier
+     * @return ResponseEntity with boolean value as repose, value is boolean flag - success/failure
+     */
+    @Operation(summary = "Deleting profile by id")
     @DeleteMapping("/{id}")
     public ResponseEntity<Boolean> delete(@PathVariable UUID id) {
         return new ResponseEntity<>(

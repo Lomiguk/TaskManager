@@ -2,6 +2,7 @@ package org.example.taskmanager.configuration;
 
 import io.swagger.v3.oas.models.Components;
 import io.swagger.v3.oas.models.OpenAPI;
+import io.swagger.v3.oas.models.info.Contact;
 import io.swagger.v3.oas.models.info.Info;
 import io.swagger.v3.oas.models.security.SecurityRequirement;
 import io.swagger.v3.oas.models.security.SecurityScheme;
@@ -15,7 +16,7 @@ public class SwaggerConfiguration {
     public static final String BARER_FORMAT = "JWT";
     public static final String VERSION = "0.1";
     public static final String BARER_AUTH = "Bearer Authentication";
-    public static final String TITLE = "My REST API";
+    public static final String TITLE = "Task manager REST API";
     public static final String DESCRIPTION = "Description of API.";
 
     private SecurityScheme createAPIKeyScheme() {
@@ -31,7 +32,11 @@ public class SwaggerConfiguration {
                         (BARER_AUTH, createAPIKeyScheme()))
                 .info(new Info().title(TITLE)
                         .description(DESCRIPTION)
-                        .version(VERSION)
+                        .version(VERSION).contact(new Contact()
+                                .name("Skibin Denis")
+                                .email("d.sckibin2017@yandex.ru")
+                                .url("https://voronezh.hh.ru/resume/66bdd11eff0c279b6a0039ed1f53686b734a58")
+                        )
                 );
     }
 }
